@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    hello
+    <script>
+        fetch('/get')
+            .then(res => res.json())
+            .then((res) => {
+                console.log(res)
+            })
+    </script>
+</body>
+</html>
