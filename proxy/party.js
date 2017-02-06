@@ -1,14 +1,12 @@
-const models = require('../models')
-const Party = models.Party
+const Party = require('../models/party')
 
-
-exports.add = function({userId, title, time, location, numberOfPlayer}) {
+exports.add = function({userId, title, time, location, players}) {
     return Party.create({
         userId,
         title,
         time,
         location,
-        numberOfPlayer,  
+        players,  
     })
 }
 
@@ -22,4 +20,15 @@ exports.getAll = function() {
 
 exports.update = function(id, party) {
     return exports.getById(id).update(party)
+}
+
+exports.addPlayer = function(id, player) {
+    return Party.update(
+        {_id: id},
+        {$push: {players: player}}
+    )
+}
+
+exports.remove = function() {
+    return Party.remove()
 }

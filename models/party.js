@@ -5,7 +5,8 @@ const PartySchema = new mongoose.Schema({
     title: String,
     time: Number,
     location: String,
-    numberOfPlayer: Number,
+    players: Array,
 })
+const Party = mongoose.model('Party', PartySchema)
 
-mongoose.model('Party', PartySchema)
+module.exports = Party

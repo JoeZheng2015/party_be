@@ -20,30 +20,41 @@ exports.getById = function(req, res) {
 exports.add = function (req, res) {
     const party = configureParty(req.body)
 
-    Party.add(party).then(() => {
-        res.send({
-            ret: 0,
-            message: 'success'
+    Party.add(party)
+        .then(data => exports.addPlayer(data._id, party.player))
+        .then(() => {
+            res.send({
+                ret: 0,
+                message: 'success'
+            })
+        }, () => {
+            res.send({
+                ret: 1,
+            })
         })
-    }, () => {
-        res.send({
-            ret: 1,
-        })
-    })
 }
 
 exports.update = function (req, res) {
     const id = req.params.id
-    const party = configureParty(req.body)
+    const player = configureParty(req.body)
 
-    Party.update(id, party).then(() => {
-        res.send({
-            ret: 0,
-            message: 'success'
+    exports.addPlayer(id, player)
+        .then(() => Party.getById(id))
+        .then(party => {
+            res.send({
+                ret: 0,
+                party,
+            })
+        }, () => {
+            res.send({
+                ret: 1,
+            })
         })
-    }, () => {
-        res.send({
-            ret: 1,
-        })
-    })
+}
+
+exports.addPlayer = function (id, player) {
+    return Party.update(
+        {_id: id},
+        {$push: {players: player}}
+    )
 }
