@@ -21,7 +21,7 @@ exports.add = function (req, res) {
     const party = configureParty(req.body)
 
     Party.add(party)
-        .then(data => exports.addPlayer(data._id, party.player))
+        .then(data => Party.addPlayer(data._id, party.player))
         .then(() => {
             res.send({
                 ret: 0,
@@ -38,7 +38,7 @@ exports.update = function (req, res) {
     const id = req.params.id
     const player = configureParty(req.body)
 
-    exports.addPlayer(id, player)
+    Party.addPlayer(id, player)
         .then(() => Party.getById(id))
         .then(party => {
             res.send({
@@ -50,11 +50,4 @@ exports.update = function (req, res) {
                 ret: 1,
             })
         })
-}
-
-exports.addPlayer = function (id, player) {
-    return Party.update(
-        {_id: id},
-        {$push: {players: player}}
-    )
 }

@@ -10,7 +10,7 @@ exports.add = function({userId, title, time, location, players}) {
     })
 }
 
-exports.getById = function(id) {
+const getById = exports.getById = (id) => {
     return Party.findOne({_id: id})
 }
 
@@ -19,7 +19,7 @@ exports.getAll = function() {
 }
 
 exports.update = function(id, party) {
-    return exports.getById(id).update(party)
+    return getById(id).update(party)
 }
 
 exports.addPlayer = function(id, player) {
