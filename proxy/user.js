@@ -12,7 +12,7 @@ exports.addPartyId = function(userId, partyId) {
 }
 
 exports.getByUserId = function(userId) {
-    return User.find({userId})
+    return User.findOne({userId})
 }
 
 exports.remove = function() {

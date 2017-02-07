@@ -1,10 +1,13 @@
 const {Party, User} = require('../proxy')
 const {configureParty} = require('../helpers')
 
-exports.getAll = function(req, res) {
-    Party.getAll()
-        .then(result => {
-            res.send(result)
+exports.getParties = function(req, res) {
+    const {userId} = req.query
+
+    User.getByUserId(userId)
+        .then(user => Party.getByIds(user.partyIds))
+        .then(parties => {
+            res.send(parties)
         })
 }
 
@@ -21,21 +24,16 @@ exports.add = function (req, res) {
     const party = configureParty(req.body)
     Party.add(party)
         .then(data => {
-            const {userId} = party
+            const userId = req.body.userId
             const partyId = data._id
-
             Party.addPlayer(partyId, party.player)
 
             return User.getByUserId(userId).then(user => {
-                    if (user.length) {
+                    if (user) {
                         return User.addPartyId(userId, partyId)
                     }
                     else {
-                        console.log(1)
-                        return User.addUser(userId).then(res => {
-                                console.log(res)
-                                return User.addPartyId(userId, partyId)
-                            })
+                        return User.addUser(userId).then(() => User.addPartyId(userId, partyId))
                     }
                 })
         })
@@ -44,7 +42,9 @@ exports.add = function (req, res) {
                 ret: 0,
                 message: 'success'
             })
-        }, () => {
+        }, (error) => {
+            console.error(error)
+
             res.send({
                 ret: 1,
             })
@@ -67,4 +67,16 @@ exports.update = function (req, res) {
                 ret: 1,
             })
         })
+}
+
+exports.addPlayer = function(id, player) {
+    console.log(Party, Party.update)
+    return Party.update(
+        {_id: id},
+        {$push: {players: player}},
+        {},
+        (res) => {
+            console.log('-', res)
+        }
+    )
 }

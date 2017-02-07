@@ -1,18 +1,31 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
+const mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost/test')
 
-
-const app = express()
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookieParser())
-
-app.use('/', (req, res) => {
-    res.send('hello')
+const UserSchema = new mongoose.Schema({
+    userId: Number,
+    partyIds: [String],
 })
 
-const server = app.listen(8080, () => {
-    console.log('server已启动在 http://localhost:8080')
+const User = mongoose.model('User', UserSchema)
+const ids = []
+
+User.create({
+    userId: 0,
+    partyIds: []
+})
+.then(res => {
+    ids.push(res._id)
+
+    return User.create({
+        userId: 1,
+        partyIds: ['abd']
+    })
+})
+.then(res => ids.push(res._id))
+.then(() => User.find({}))
+.then(() => User.find({$or: ids.map(id => ({_id: id}))}))
+.then(res => console.log(res))
+.then(() => User.remove())
+.then(() => {
+    console.log('remove done')
 })

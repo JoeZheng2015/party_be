@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
     res.sendFile(`${__dirname}/index.html`)
 })
 
-router.get('/parties', party.getAll)
+router.get('/parties', party.getParties)
 
 router.get('/parties/:id', party.getById)
 

@@ -14,8 +14,11 @@ const getById = exports.getById = (id) => {
     return Party.findOne({_id: id})
 }
 
-exports.getAll = function() {
-    return Party.find()
+exports.getByIds = function(ids) {
+    console.log(2)
+    const a = ids.map(id => ({_id: id}))
+    console.log(a)
+    return Party.find({$or: a})
 }
 
 exports.update = function(id, party) {
@@ -25,8 +28,7 @@ exports.update = function(id, party) {
 exports.addPlayer = function(id, player) {
     return Party.update(
         {_id: id},
-        {$push: {players: player}}
-    )
+        {$push: {players: player}}).exec()
 }
 
 exports.remove = function() {
