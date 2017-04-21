@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const PartySchema = new mongoose.Schema({
-    userId: Number,
+    userId: String,
     title: String,
     time: Number,
     location: String,

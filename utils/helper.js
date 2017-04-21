@@ -1,4 +1,4 @@
-function configureParty(party) {
+exports.configureParty = function(party) {
     const defaultParty = {
         userId: 0,
         title: '标题',
@@ -12,8 +12,6 @@ function configureParty(party) {
     return party
 }
 
-const helpers = {
-    configureParty,
+exports.getUserId = function(req) {
+    return req.headers['x-wx-id']
 }
-
-module.exports = helpers

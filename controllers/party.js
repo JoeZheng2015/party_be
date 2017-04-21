@@ -1,8 +1,8 @@
 const {Party, User} = require('../proxy')
-const {configureParty} = require('../helpers')
+const {configureParty, getUserId} = require('../utils/helper')
 
 exports.getParties = function(req, res) {
-    const {userId} = req.query
+    const userId = getUserId(req)
 
     User.getByUserId(userId)
         .then(user => Party.getByIds(user.partyIds))
@@ -22,9 +22,10 @@ exports.getById = function(req, res) {
 
 exports.add = function (req, res) {
     const party = configureParty(req.body)
+
     Party.add(party)
         .then(data => {
-            const userId = req.body.userId
+            const userId = getUserId(req)
             const partyId = data._id
             Party.addPlayer(partyId, party.player)
 
