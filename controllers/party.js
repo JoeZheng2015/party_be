@@ -53,7 +53,7 @@ exports.add = function (req, res) {
 }
 
 exports.update = function (req, res) {
-    const id = req.params.id
+    const id = getUserId(req)
     const player = configureParty(req.body)
 
     Party.addPlayer(id, player)
@@ -71,7 +71,6 @@ exports.update = function (req, res) {
 }
 
 exports.addPlayer = function(id, player) {
-    console.log(Party, Party.update)
     return Party.update(
         {_id: id},
         {$push: {players: player}},
