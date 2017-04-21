@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const router = require('./router')
 require('./models')
 const cookieParser = require('cookie-parser')
+require('./setup-qcloud-sdk')
 
 
 const app = express()
