@@ -53,7 +53,7 @@ exports.add = function (req, res) {
 }
 
 exports.update = function (req, res) {
-    const id = getUserId(req)
+    const id = req.params.id
     const player = configureParty(req.body)
 
     Party.addPlayer(id, player)
