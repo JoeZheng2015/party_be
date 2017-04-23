@@ -15,3 +15,7 @@ exports.configureParty = function(party) {
 exports.getUserId = function(req) {
     return req.headers['x-wx-id']
 }
+
+exports.configurePlayer = function(player, userId) {
+    return Object.assign({}, player, {userId})
+}

@@ -15,9 +15,7 @@ const getById = exports.getById = (id) => {
 }
 
 exports.getByIds = function(ids) {
-    console.log(2)
     const a = ids.map(id => ({_id: id}))
-    console.log(a)
     return Party.find({$or: a})
 }
 
