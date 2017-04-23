@@ -28,7 +28,7 @@ exports.add = function (req, res) {
             const userId = getUserId(req)
             const partyId = data._id
             const player = configurePlayer(party.player, userId)
-            
+
             Party.addPlayer(partyId, player)
 
             return User.getByUserId(userId).then(user => {
@@ -58,16 +58,25 @@ exports.update = function (req, res) {
     const partyId = req.params.id
     const player = configurePlayer(req.body, getUserId(req))
 
-    Party.addPlayer(partyId, player)
+    Party.getById(partyId)
+        .then(party => {
+            if (party.players.findIndex(p => p.id === player.id) === -1) {
+                return Party.addPlayer(partyId, player)
+            }
+            else {
+                return Promise.reject('您已经参加了该聚会')
+            }
+        })
         .then(() => Party.getById(partyId))
         .then(party => {
             res.send({
                 ret: 0,
                 party,
             })
-        }, () => {
+        }, (err = '') => {
             res.send({
                 ret: 1,
+                mes: err,
             })
         })
 }
