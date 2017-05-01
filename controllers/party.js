@@ -60,11 +60,13 @@ exports.update = function (req, res) {
 
     Party.getById(partyId)
         .then(party => {
-            if (party.players.findIndex(p => p.id === player.id) === -1) {
-                return Party.addPlayer(partyId, player)
+            const hasJoined = party.players.findIndex(p => p.userId === player.userId) !== -1
+            if (hasJoined) {
+                const players = party.players.filter(p => p.userId !== player.userId)
+                return Party.decreasePlayer(partyId, players)
             }
             else {
-                return Promise.reject('您已经参加了该聚会')
+                return Party.addPlayer(partyId, player)
             }
         })
         .then(() => Party.getById(partyId))

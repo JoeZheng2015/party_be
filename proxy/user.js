@@ -24,7 +24,6 @@ exports.removePartyId = function(userId, partyId) {
     return User.findOne({userId})
         .then(res => {
             const partyIds = res.partyIds.filter(id => id !== partyId)
-            console.log('--', res.partyIds, partyIds)
             return User.update({userId}, {$set: {partyIds: partyIds}})
         })
 }

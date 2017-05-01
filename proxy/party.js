@@ -32,3 +32,10 @@ exports.addPlayer = function(id, player) {
 exports.remove = function() {
     return Party.remove()
 }
+
+exports.decreasePlayer = function(id, players) {
+    console.log('-decreasePlayer', id, players)
+    return Party.update(
+        {_id: id},
+        {$set: {players}}).exec()
+}
