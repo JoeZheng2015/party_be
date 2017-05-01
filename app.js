@@ -2,7 +2,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const router = require('./router')
 require('./models')
-const cookieParser = require('cookie-parser')
 require('./setup-qcloud-sdk')
 
 
@@ -10,7 +9,6 @@ const app = express()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookieParser())
 
 app.use('/', router)
 
