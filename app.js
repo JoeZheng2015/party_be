@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/', router)
 
-const server = app.listen(8080, () => {
-    console.log('server已启动在 http://localhost:8080')
+const PORT = 443
+const server = app.listen(PORT, () => {
+    console.log(`server已启动在 http://localhost:${PORT}`)
 })
