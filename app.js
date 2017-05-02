@@ -4,7 +4,8 @@ const router = require('./router')
 require('./models')
 require('./setup-qcloud-sdk')
 
-
+const isDev = process.env.MODE === 'dev'
+const PORT = isDev ? 8080 : 80
 const app = express()
 
 app.use(bodyParser.json())
@@ -19,7 +20,6 @@ app.use((req, res, next) => {
 app.use('/', router)
 app.use(express.static('public'))
 
-const PORT = 80
 const server = app.listen(PORT, () => {
     console.log(`server已启动在 http://localhost:${PORT}`)
 })
