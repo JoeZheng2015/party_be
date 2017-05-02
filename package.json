@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mongod --dbpath=/data | node test/index.js",
     "dev": "mongod --dbpath=/data | MODE=dev node app.js",
-    "start": "mongod --dbpath=/data | node app.js",
+    "pro": "mongod --dbpath=/data | MODE=pro node app.js",
+    "start": "mongod --dbpath=/data | pm2 start process.json",
     "workbench": "node workbench.js"
   },
   "author": "",
