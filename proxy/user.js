@@ -29,12 +29,12 @@ exports.removePartyId = function(userId, partyId) {
 }
 
 exports.addParty = function(userId, partyId) {
-    return User.getByUserId(userId).then(user => {
+    return getByUserId(userId).then(user => {
             if (user) {
-                return User.addPartyId(userId, partyId)
+                return addPartyId(userId, partyId)
             }
             else {
-                return User.addUser(userId).then(() => User.addPartyId(userId, partyId))
+                return addUser(userId).then(() => addPartyId(userId, partyId))
             }
         })
 }
