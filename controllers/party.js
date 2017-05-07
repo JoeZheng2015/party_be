@@ -31,14 +31,7 @@ exports.add = function (req, res) {
 
             Party.addPlayer(partyId, player)
 
-            return User.getByUserId(userId).then(user => {
-                    if (user) {
-                        return User.addPartyId(userId, partyId)
-                    }
-                    else {
-                        return User.addUser(userId).then(() => User.addPartyId(userId, partyId))
-                    }
-                })
+            return User.addParty(userId, partyId)
         })
         .then(() => {
             res.send({
@@ -57,16 +50,17 @@ exports.add = function (req, res) {
 exports.update = function (req, res) {
     const partyId = req.params.id
     const player = configurePlayer(req.body, getUserId(req))
+    const userId = player.userId
 
     Party.getById(partyId)
         .then(party => {
-            const hasJoined = party.players.findIndex(p => p.userId === player.userId) !== -1
+            const hasJoined = party.players.findIndex(p => p.userId === userId) !== -1
             if (hasJoined) {
-                const players = party.players.filter(p => p.userId !== player.userId)
+                const players = party.players.filter(p => p.userId !== userId)
                 return Party.decreasePlayer(partyId, players)
             }
             else {
-                return Party.addPlayer(partyId, player)
+                return Party.addPlayer(partyId, player).then(() => User.addParty(userId, partyId))
             }
         })
         .then(() => Party.getById(partyId))
