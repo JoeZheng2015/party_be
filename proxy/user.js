@@ -1,18 +1,18 @@
 const User = require('../models/user')
 const {getUserId} = require('../utils/helper')
 
-exports.addUser = function(userId) {
+const addUser = exports.addUser = function(userId) {
     return User.create({
         userId,
         partyIds: [],
     })
 }
 
-exports.addPartyId = function(userId, partyId) {
+const addPartyId = exports.addPartyId = function(userId, partyId) {
     return User.update({userId}, {$push: {partyIds: partyId}})
 }
 
-exports.getByUserId = function(userId) {
+const getByUserId = exports.getByUserId = function(userId) {
     return User.findOne({userId})
 }
 
