@@ -27,3 +27,14 @@ exports.removePartyId = function(userId, partyId) {
             return User.update({userId}, {$set: {partyIds: partyIds}})
         })
 }
+
+exports.addParty = function(userId, partyId) {
+    return User.getByUserId(userId).then(user => {
+            if (user) {
+                return User.addPartyId(userId, partyId)
+            }
+            else {
+                return User.addUser(userId).then(() => User.addPartyId(userId, partyId))
+            }
+        })
+}
