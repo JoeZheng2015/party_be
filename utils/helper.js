@@ -1,4 +1,4 @@
-exports.configureParty = function(party) {
+exports.configureParty = function(party, userId) {
     const defaultParty = {
         userId: 0,
         title: '标题',

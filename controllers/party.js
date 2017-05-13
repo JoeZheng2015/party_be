@@ -21,11 +21,11 @@ exports.getById = function(req, res) {
 }
 
 exports.add = function (req, res) {
-    const party = configureParty(req.body)
+    const userId = getUserId(req)
+    const party = configureParty(req.body, userId)
 
     Party.add(party)
         .then(data => {
-            const userId = getUserId(req)
             const partyId = data._id
             const player = configurePlayer(party.player, userId)
 
