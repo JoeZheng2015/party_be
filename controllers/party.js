@@ -22,7 +22,7 @@ exports.getById = function(req, res) {
 
 exports.add = function (req, res) {
     const userId = getUserId(req)
-    const party = configureParty(req.body, userId)
+    const party = configureParty(Object.assign({}, req.body, {userId}))
 
     Party.add(party)
         .then(data => {
@@ -49,32 +49,44 @@ exports.add = function (req, res) {
 
 exports.update = function (req, res) {
     const partyId = req.params.id
-    const player = configurePlayer(req.body, getUserId(req))
-    const userId = player.userId
+    const userId = getUserId(req)
 
-    Party.getById(partyId)
-        .then(party => {
-            const hasJoined = party.players.findIndex(p => p.userId === userId) !== -1
-            if (hasJoined) {
-                const players = party.players.filter(p => p.userId !== userId)
-                return Party.decreasePlayer(partyId, players)
-            }
-            else {
-                return Party.addPlayer(partyId, player).then(() => User.addParty(userId, partyId))
-            }
-        })
-        .then(() => Party.getById(partyId))
-        .then(party => {
-            res.send({
-                ret: 0,
-                party,
+    if (req.body.isAmend) {
+        const party = configureParty(Object.assign({}, req.body, {userId}))
+        Party.update(partyId, party)
+            .then(() => {
+                res.send({
+                    ret: 0,
+                })
             })
-        }, (err = '') => {
-            res.send({
-                ret: 1,
-                mes: err,
+    }
+    else {
+        const player = configurePlayer(req.body, userId)
+
+        Party.getById(partyId)
+            .then(party => {
+                const hasJoined = party.players.findIndex(p => p.userId === userId) !== -1
+                if (hasJoined) {
+                    const players = party.players.filter(p => p.userId !== userId)
+                    return Party.decreasePlayer(partyId, players)
+                }
+                else {
+                    return Party.addPlayer(partyId, player).then(() => User.addParty(userId, partyId))
+                }
             })
-        })
+            .then(() => Party.getById(partyId))
+            .then(party => {
+                res.send({
+                    ret: 0,
+                    party,
+                })
+            }, (err = '') => {
+                res.send({
+                    ret: 1,
+                    mes: err,
+                })
+            })
+    }
 }
 
 exports.addPlayer = function(id, player) {
